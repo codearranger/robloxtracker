@@ -12,17 +12,17 @@ import (
 )
 
 type UserPresence struct {
-	UserPresenceType int
-	LastOnline       time.Time
-	PlaceID          int64
-	RootPlaceID      int64
-	GameID           string
-	UniverseID       int64
-	UserID           int64
+	UserPresenceType int       `json:"userPresenceType"`
+	LastOnline       time.Time `json:"lastOnline"`
+	PlaceID          int64     `json:"placeId"`
+	RootPlaceID      int64     `json:"rootPlaceId"`
+	GameID           string    `json:"gameId"`
+	UniverseID       int64     `json:"universeId"`
+	UserID           int64     `json:"userId"`
 }
 
 type UserPresenceResponse struct {
-	UserPresences []UserPresence
+	UserPresences []UserPresence `json:"userPresences"`
 }
 
 type User struct {
