@@ -1,11 +1,12 @@
 module github.com/joecryptotoo/robloxtracker
 
-go 1.19
+go 1.18
 
 require (
 	github.com/anaminus/rbxauth v0.4.0
 	github.com/gregdel/pushover v1.1.0
 	github.com/prometheus/client_golang v1.14.0
+	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
 )
 
 require (

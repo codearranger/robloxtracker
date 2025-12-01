@@ -84,10 +84,9 @@ func monitorUser(reg *prometheus.Registry, userID int64, metrics *Metrics, notif
 		if presenceState != user.Presence.UserPresenceType {
 			// Update last online time
 			user.LastPresenceType = presenceState
-			minutesSinceLastOnline := int(time.Now().UTC().Sub(user.Presence.LastOnline).Minutes())
 
 			// Log presence change
-			log.Printf("User %s is %s, last online %d minutes ago\n", user.Name, presenceTypeToString(user.Presence.UserPresenceType), minutesSinceLastOnline)
+			log.Printf("User %s is %s, last online: %s\n", user.Name, presenceTypeToString(user.Presence.UserPresenceType), formatLastOnline(user.Presence))
 
 			log.Printf("Presence: %#v\n", user.Presence)
 

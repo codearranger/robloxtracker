@@ -14,12 +14,12 @@ func notifyPresenceChange(user User) {
 	recipient := pushover.NewRecipient(os.Getenv("PUSHOVER_USER_KEY"))
 
 	minutesSinceLastState := int(time.Now().UTC().Sub(user.LastPresenceChange).Minutes())
-	minutesSinceLastOnline := int(time.Now().UTC().Sub(user.Presence.LastOnline).Minutes())
+	lastOnlineStr := formatLastOnline(user.Presence)
 
 	lastPresenceType := presenceTypeToString(user.LastPresenceType)
 	presenceType := presenceTypeToString(user.Presence.UserPresenceType)
-	message := pushover.NewMessage(fmt.Sprintf("User %s is now %s, was %s for %d minutes, last online %d minutes ago.",
-		user.Name, presenceType, lastPresenceType, minutesSinceLastState, minutesSinceLastOnline))
+	message := pushover.NewMessage(fmt.Sprintf("User %s is now %s, was %s for %d minutes, last online: %s",
+		user.Name, presenceType, lastPresenceType, minutesSinceLastState, lastOnlineStr))
 	message.Title = "Roblox Presence Change"
 	message.URL = fmt.Sprintf("https://www.roblox.com/users/%d/profile", user.ID)
 	message.URLTitle = "View Profile"
