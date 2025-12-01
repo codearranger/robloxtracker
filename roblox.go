@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"os"
 	"time"
 )
 
@@ -38,8 +40,26 @@ type User struct {
 	Metrics                Metrics      `json:"metrics"`
 }
 
+func getHTTPClient() (*http.Client, error) {
+	proxyURL, err := url.Parse(fmt.Sprintf("http://%s:%s@%s:%s", os.Getenv("PROXY_USER"), os.Getenv("PROXY_PASSWORD"), os.Getenv("PROXY_HOST"), os.Getenv("PROXY_PORT")))
+	if err != nil {
+		return nil, err
+	}
+
+	return &http.Client{
+		Transport: &http.Transport{
+			Proxy: http.ProxyURL(proxyURL),
+		},
+	}, nil
+}
+
 func getUsernameFromID(id int64) (User, error) {
-	resp, err := http.Get(fmt.Sprintf("https://users.roblox.com/v1/users/%d", id))
+	client, err := getHTTPClient()
+	if err != nil {
+		return User{}, err
+	}
+
+	resp, err := client.Get(fmt.Sprintf("https://users.roblox.com/v1/users/%d", id))
 	if err != nil {
 		return User{}, err
 	}
@@ -72,7 +92,13 @@ func checkPresence(userID int64) (UserPresence, error) {
 		return UserPresence{}, err
 	}
 
-	resp, err := http.Post("https://presence.roblox.com/v1/presence/users", "application/json", bytes.NewBuffer(reqBytes))
+	client, err := getHTTPClient()
+	if err != nil {
+		fmt.Println("Error getting HTTP client:", err)
+		return UserPresence{}, err
+	}
+
+	resp, err := client.Post("https://presence.roblox.com/v1/presence/users", "application/json", bytes.NewBuffer(reqBytes))
 	if err != nil {
 		fmt.Println("Error making request:", err)
 		return UserPresence{}, err

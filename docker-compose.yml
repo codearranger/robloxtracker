@@ -9,6 +9,8 @@ services:
       - 8080/tcp
     networks:
       - roblox
+    volumes:
+      - robloxtracker-data:/data
   prometheus:
     image: prom/prometheus:v2.42.0
     restart: unless-stopped
@@ -31,3 +33,4 @@ networks:
 
 volumes:
   prometheus-data:
+  robloxtracker-data:
