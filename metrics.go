@@ -5,15 +5,15 @@ import (
 )
 
 type Metrics struct {
-	UserPresenceType prometheus.Gauge
+	UserPresenceType *prometheus.GaugeVec
 }
 
 func robloxMetrics(reg prometheus.Registerer) *Metrics {
 	m := &Metrics{
-		UserPresenceType: prometheus.NewGauge(prometheus.GaugeOpts{
+		UserPresenceType: prometheus.NewGaugeVec(prometheus.GaugeOpts{
 			Name: "UserPresenceType",
 			Help: "Offline, Online, InGame, InStudio, Unknown",
-		}),
+		}, []string{"userid"}),
 	}
 
 	reg.MustRegister(m.UserPresenceType)
